@@ -1,0 +1,41 @@
+query GetRepositoriesFromUser($owner: String!, $cursor: String) {
+  user(login: $owner) {
+    repositories(first: 20, after: $cursor, isFork: false, affiliations: [OWNER]) {
+      nodes {
+        name
+        nameWithOwner
+        autoMergeAllowed
+        branchProtectionRules(first: 100) {
+          nodes {
+            pattern
+            allowsDeletions
+            allowsForcePushes
+            isAdminEnforced
+            requiredApprovingReviewCount
+            requiredStatusCheckContexts
+            requiresCommitSignatures
+            requiresLinearHistory
+            requiresConversationResolution
+            requiresStatusChecks
+            requiresStrictStatusChecks
+          }
+          pageInfo {
+            hasNextPage
+          }
+        }
+        hasIssuesEnabled
+        hasProjectsEnabled
+        hasWikiEnabled
+        isArchived
+        isDisabled
+        mergeCommitAllowed
+        rebaseMergeAllowed
+        squashMergeAllowed
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}

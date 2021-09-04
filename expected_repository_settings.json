@@ -1,0 +1,9 @@
+{
+  "auto_merge_allowed": true,
+  "has_issues_enabled": null,
+  "has_projects_enabled": false,
+  "has_wiki_enabled": null,
+  "merge_commit_allowed": false,
+  "squash_merge_allowed": true,
+  "rebase_merge_allowed": false
+}
