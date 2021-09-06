@@ -1,4 +1,4 @@
-# github-repo-normalized
+# github-repo-normalizer
 
 This project aims to help ensuring you or your organizations repositories' settings and branch protection rules conform to the standard you have set up.
 
