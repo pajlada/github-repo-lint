@@ -4,6 +4,8 @@ use log::*;
 use std::collections::HashMap;
 use std::path::Path;
 
+mod api;
+
 mod branch_protection_rules;
 mod repository_settings;
 
@@ -32,12 +34,14 @@ fn convert_branch_protection_rules_to_hashmap(
 }
 
 fn check_repository(
-    client: &reqwest::blocking::Client,
+    api_client: &api::Client,
     mut repository: GQLRepository,
     expected_repository_settings: &RepositorySettings,
     expected_branch_protection_rules: &BranchProtectionRules,
 ) -> Result<(), anyhow::Error> {
-    let repo_name = repository.name_with_owner.clone();
+    let repo_name = repository.name.as_str();
+    let repo_owner = repository.owner.login.as_str();
+    let repo_with_owner = repository.name_with_owner.as_str();
 
     if repository.branch_protection_rules.page_info.has_next_page {
         return Err(anyhow::anyhow!(
@@ -60,25 +64,18 @@ fn check_repository(
         {
             if let Some(diff) = expected_branch_protection_rule.diff(&actual_branch_protection_rule)
             {
-                debug!("Repository {} Diff: {:?}", repo_name, diff);
+                let branch_protection_name = actual_branch_protection_rule.pattern.as_str();
+                debug!("Repository {} Diff: {:?}", repo_with_owner, diff);
                 let patch = diff.dump_patch(&actual_branch_protection_rule);
-                debug!("Repository {} Patch: {:?}", repo_name, patch);
-                if repo_name == "pajlada/TempestNotifier" {
-                    let url = format!(
-                        "https://api.github.com/repos/{}/branches/{}/protection",
-                        repo_name, pattern
-                    );
-                    let rb = client
-                        .put(url)
-                        .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
-                        .json(&patch);
-                    let request = rb.build().expect("Request must be built");
-                    info!(
-                        "[{}] Changing: {:?}",
+                debug!("Repository {} Patch: {:?}", repo_with_owner, patch);
+                if repo_with_owner == "pajlada/TempestNotifier" {
+                    let response = api_client.update_branch_protection(
+                        repo_owner,
                         repo_name,
-                        request.body().expect("asd")
-                    );
-                    let response = client.execute(request)?;
+                        branch_protection_name,
+                        patch,
+                    )?;
+
                     info!("Response: {:?}", response);
                     info!("Response body: {:?}", response.text()?);
                 }
@@ -86,7 +83,7 @@ fn check_repository(
             } else {
                 debug!(
                     "Repository {} has a 100% matching branch protection rule:\n{:?}\n{:?}",
-                    repo_name, actual_branch_protection_rule, expected_branch_protection_rule
+                    repo_with_owner, actual_branch_protection_rule, expected_branch_protection_rule
                 );
             }
         } else {
@@ -100,18 +97,14 @@ fn check_repository(
     if !result.empty() {
         // Update repository settings
         let patch = result.dump_patch();
-        let url = format!("https://api.github.com/repos/{}", repo_name);
-        let rb = client
-            .post(url)
-            .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
-            .json(&patch);
-        let request = rb.build().expect("Request must be built");
-        info!(
-            "[{}] Changing: {:?}",
-            repo_name,
-            request.body().expect("asd")
-        );
-        client.execute(request)?;
+        if !patch.is_empty() {
+            let response = api_client.update_repository_settings(repo_owner, repo_name, patch)?;
+            info!("Update repository settings response: {:?}", response);
+            info!(
+                "Update repository settings body:     {:?}",
+                response.text()?
+            );
+        }
     }
 
     Ok(())
@@ -119,6 +112,7 @@ fn check_repository(
 
 fn check_repositories(
     client: &reqwest::blocking::Client,
+    api_client: &api::Client,
     owner: String,
     expected_repository_settings: RepositorySettings,
     expected_branch_protection_rules: BranchProtectionRules,
@@ -154,7 +148,7 @@ fn check_repositories(
             }
             let name_with_owner = rep.name_with_owner.clone();
             if let Err(e) = check_repository(
-                client,
+                api_client,
                 rep,
                 &expected_repository_settings,
                 &expected_branch_protection_rules,
@@ -181,6 +175,9 @@ fn main() -> Result<(), anyhow::Error> {
     let github_api_token =
         std::env::var("GITHUB_API_TOKEN").expect("Missing GITHUB_API_TOKEN env var");
 
+    let api_root = std::env::var("GITHUB_API_ROOT")
+        .or_else::<std::env::VarError, _>(|_| Ok("https://api.github.com".to_string()))?;
+
     let client = Client::builder()
         .user_agent("test")
         .default_headers(
@@ -192,8 +189,17 @@ fn main() -> Result<(), anyhow::Error> {
         )
         .build()?;
 
+    let api_client = api::new(&client, api_root.as_str())?;
+
+    let repos = api_client.get_repositories_from_user("pajlada")?;
+
+    for repo in repos {
+        info!("Repo: {}", repo.name);
+    }
+
     check_repositories(
         &client,
+        &api_client,
         "pajlada".to_string(),
         expected_repository_settings,
         expected_branch_protection_rules,

@@ -38,7 +38,7 @@ macro_rules! define_repository_settings {
             //     )*
             // }
 
-            pub fn dump_patch(&self) -> Option<HashMap<&str, serde_json::Value>> {
+            pub fn dump_patch(&self) -> HashMap<&str, serde_json::Value> {
                 let mut map = HashMap::new();
 
                 $(
@@ -47,11 +47,7 @@ macro_rules! define_repository_settings {
                     }
                 )*
 
-                if !map.is_empty() {
-                    return Some(map);
-                }
-
-                return None;
+                    return map;
             }
 
             pub fn empty(&self) -> bool {
