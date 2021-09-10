@@ -3,6 +3,10 @@ query GetRepositoriesFromUser($owner: String!, $cursor: String) {
     repositories(first: 20, after: $cursor, isFork: false, affiliations: [OWNER]) {
       nodes {
         name
+        owner {
+          __typename
+          login
+        }
         nameWithOwner
         autoMergeAllowed
         branchProtectionRules(first: 100) {
