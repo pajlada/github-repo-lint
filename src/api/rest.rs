@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use crate::api::Client;
 
-impl<'a> Client<'a> {
+impl Client {
     pub fn update_branch_protection(
         &self,
         repo_owner: &str,

@@ -1,5 +1,4 @@
 use ::reqwest::blocking::Client;
-use graphql_client::reqwest::post_graphql_blocking as post_graphql;
 use log::*;
 use std::collections::HashMap;
 use std::path::Path;
@@ -11,9 +10,6 @@ mod repository_settings;
 
 mod get_repositories_from_user;
 
-use crate::get_repositories_from_user::GetRepositoriesFromUser;
-
-use crate::get_repositories_from_user::get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodes as GQLRepository;
 use crate::get_repositories_from_user::get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodesBranchProtectionRulesNodes as GQLBranchProtectionRules;
 
 use crate::branch_protection_rules::BranchProtectionRules;
@@ -35,7 +31,7 @@ fn convert_branch_protection_rules_to_hashmap(
 
 fn check_repository(
     api_client: &api::Client,
-    mut repository: GQLRepository,
+    mut repository: api::graphql::Repository,
     expected_repository_settings: &RepositorySettings,
     expected_branch_protection_rules: &BranchProtectionRules,
 ) -> Result<(), anyhow::Error> {
@@ -111,55 +107,32 @@ fn check_repository(
 }
 
 fn check_repositories(
-    client: &reqwest::blocking::Client,
     api_client: &api::Client,
     owner: String,
     expected_repository_settings: RepositorySettings,
     expected_branch_protection_rules: BranchProtectionRules,
 ) -> Result<(), anyhow::Error> {
-    let mut has_next_page = true;
-    let mut cursor: Option<String> = None;
+    let repositories = api_client.get_repositories_from_user(&owner)?;
 
-    while has_next_page {
-        let variables = get_repositories_from_user::get_repositories_from_user::Variables {
-            owner: owner.clone(),
-            cursor: cursor.clone(),
-        };
-
-        let response_body = post_graphql::<GetRepositoriesFromUser, _>(
-            client,
-            "https://api.github.com/graphql",
-            variables,
-        )?;
-
-        let response_data: get_repositories_from_user::get_repositories_from_user::ResponseData =
-            response_body.data.expect("missing response data");
-
-        let repositories = response_data.user.expect("No user found").repositories;
-
-        for repository in repositories.nodes.expect("No repositories found") {
-            let rep = repository.expect("xD");
-            if rep.is_archived || rep.is_disabled {
-                info!(
-                    "Skipping {} because it's archived or disabled",
-                    rep.name_with_owner
-                );
-                continue;
-            }
-            let name_with_owner = rep.name_with_owner.clone();
-            if let Err(e) = check_repository(
-                api_client,
-                rep,
-                &expected_repository_settings,
-                &expected_branch_protection_rules,
-            ) {
-                error!("Error checking repository {}: {}", name_with_owner, e);
-            }
+    for repository in repositories {
+        if repository.is_archived || repository.is_disabled {
+            info!(
+                "Skipping {} because it's archived or disabled",
+                repository.name_with_owner
+            );
+            continue;
         }
-
-        has_next_page = repositories.page_info.has_next_page;
-        cursor = repositories.page_info.end_cursor;
+        let name_with_owner = repository.name_with_owner.clone();
+        if let Err(e) = check_repository(
+            api_client,
+            repository,
+            &expected_repository_settings,
+            &expected_branch_protection_rules,
+        ) {
+            error!("Error checking repository {}: {}", name_with_owner, e);
+        }
     }
+
     Ok(())
 }
 
@@ -189,16 +162,9 @@ fn main() -> Result<(), anyhow::Error> {
         )
         .build()?;
 
-    let api_client = api::new(&client, api_root.as_str())?;
-
-    let repos = api_client.get_repositories_from_user("pajlada")?;
-
-    for repo in repos {
-        info!("Repo: {}", repo.name);
-    }
+    let api_client = api::new(client, api_root.as_str())?;
 
     check_repositories(
-        &client,
         &api_client,
         "pajlada".to_string(),
         expected_repository_settings,

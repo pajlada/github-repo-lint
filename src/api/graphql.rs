@@ -1,13 +1,15 @@
 use graphql_client::reqwest::post_graphql_blocking as post_graphql;
-use log::*;
 
 use crate::api::Client;
-use crate::get_repositories_from_user::get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodes as Repo;
+pub use crate::get_repositories_from_user::get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodes as Repository;
 use crate::get_repositories_from_user::get_repositories_from_user::Variables as GetRepositoriesVariables;
 use crate::get_repositories_from_user::GetRepositoriesFromUser;
 
-impl<'a> Client<'a> {
-    pub fn get_repositories_from_user(&self, repo_owner: &str) -> Result<Vec<Repo>, anyhow::Error> {
+impl Client {
+    pub fn get_repositories_from_user(
+        &self,
+        repo_owner: &str,
+    ) -> Result<Vec<Repository>, anyhow::Error> {
         let url = self.api_root.join("/graphql")?;
         let mut has_next_page = true;
         let mut cursor: Option<String> = None;
@@ -19,7 +21,7 @@ impl<'a> Client<'a> {
                 cursor: cursor.clone(),
             };
             let response_body = post_graphql::<GetRepositoriesFromUser, _>(
-                self.client,
+                &self.client,
                 url.to_string(),
                 variables,
             )?;
