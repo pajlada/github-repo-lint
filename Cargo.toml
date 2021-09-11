@@ -1,5 +1,6 @@
 [package]
 name = "github-repo-normalizer"
+description = "Lint and fix batch GitHub repositories' settings and branch protection rules according to your preferences."
 version = "0.1.0"
 edition = "2018"
 include = ["files/*.graphql"]
@@ -14,3 +15,5 @@ reqwest = { version = "^0.11", features = ["json", "blocking"] }
 anyhow = "^1.0"
 log = "^0.4"
 env_logger = "^0.9"
+const_format = "^0.2"
+clap = "^2.33"

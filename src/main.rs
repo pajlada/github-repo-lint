@@ -1,19 +1,24 @@
 use ::reqwest::blocking::Client;
+use clap::{App, Arg};
+use const_format::formatcp;
 use log::*;
 use std::collections::HashMap;
 use std::path::Path;
 
 mod api;
-
 mod branch_protection_rules;
-mod repository_settings;
-
+mod config;
 mod get_repositories_from_user;
+mod repository_settings;
 
 use crate::get_repositories_from_user::get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodesBranchProtectionRulesNodes as GQLBranchProtectionRules;
 
 use crate::branch_protection_rules::BranchProtectionRules;
 use crate::repository_settings::RepositorySettings;
+
+const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
+const USER_AGENT: &str = formatcp!("{}/{}", PKG_NAME, PKG_VERSION);
 
 fn convert_branch_protection_rules_to_hashmap(
     branch_protection_rules: Option<Vec<Option<GQLBranchProtectionRules>>>,
@@ -137,22 +142,50 @@ fn check_repositories(
 }
 
 fn main() -> Result<(), anyhow::Error> {
-    env_logger::init();
+    let matches = App::new(clap::crate_name!())
+        .version(clap::crate_version!())
+        .author(clap::crate_authors!())
+        .about(clap::crate_description!())
+        .arg(
+            Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .value_name("FILE")
+                .help("Path to config file to use")
+                .default_value("config.json")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("v")
+                .short("v")
+                .multiple(true)
+                .help("Sets the level of verbosity"),
+        )
+        .get_matches();
 
-    let expected_repository_settings =
-        repository_settings::load_from_file(Path::new("expected_repository_settings.json"))?;
-    let expected_branch_protection_rules = branch_protection_rules::load_from_file(Path::new(
-        "expected_branch_protection_rules.json",
-    ))?;
+    let log_level = match matches.occurrences_of("v") {
+        0 => log::LevelFilter::Info,
+        1 => log::LevelFilter::Debug,
+        _ => log::LevelFilter::Trace,
+    };
+
+    env_logger::Builder::new()
+        .format_timestamp(None)
+        .format_target(false)
+        .filter_module(module_path!(), log_level)
+        .init();
+
+    let config_path = Path::new(matches.value_of("config").expect("value MUST be set"));
+
+    let config = config::load_config(config_path)?;
 
     let github_api_token =
         std::env::var("GITHUB_API_TOKEN").expect("Missing GITHUB_API_TOKEN env var");
 
-    let api_root = std::env::var("GITHUB_API_ROOT")
-        .or_else::<std::env::VarError, _>(|_| Ok("https://api.github.com".to_string()))?;
+    info!("Github API root: {:?}", config.github_api_root);
 
     let client = Client::builder()
-        .user_agent("test")
+        .user_agent(USER_AGENT)
         .default_headers(
             std::iter::once((
                 reqwest::header::AUTHORIZATION,
@@ -162,13 +195,13 @@ fn main() -> Result<(), anyhow::Error> {
         )
         .build()?;
 
-    let api_client = api::new(client, api_root.as_str())?;
+    let api_client = api::new(client, config.github_api_root.as_str())?;
 
     check_repositories(
         &api_client,
         "pajlada".to_string(),
-        expected_repository_settings,
-        expected_branch_protection_rules,
+        config.repository_settings,
+        config.branch_protection_rules,
     )?;
 
     Ok(())
