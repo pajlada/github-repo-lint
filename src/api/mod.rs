@@ -1,4 +1,3 @@
-pub mod graphql;
 pub mod rest;
 
 use ::reqwest::blocking::Client as r_client;

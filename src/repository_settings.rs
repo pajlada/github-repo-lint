@@ -1,18 +1,27 @@
 use serde::Deserialize;
 use serde_json::json;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufReader, Read};
-use std::path::Path;
+use std::io::Read;
 
-use crate::get_repositories_from_user::get_repositories_from_user;
+use log::*;
+
+use crate::models::RepositoryInfo;
 
 macro_rules! ensure_same {
     ($s:ident, $r:ident, $field_name:ident) => {
         if let Some(expected) = $s.$field_name {
-            let actual = $r.$field_name;
-            if expected != actual {
-                Some(expected)
+            if let Some(actual) = $r.$field_name {
+                // info!(
+                //     "Comparing ({}) e:{} to a:{}",
+                //     stringify!($field_name),
+                //     expected,
+                //     actual
+                // );
+                if expected != actual {
+                    Some(expected)
+                } else {
+                    None
+                }
             } else {
                 None
             }
@@ -23,11 +32,11 @@ macro_rules! ensure_same {
 }
 
 macro_rules! define_repository_settings {
-    ( $( $xD:ident : $field_name:ident : $field_type:ty, )* ) => {
+    ( $( $field_name:ident : $field_type:ty, )* ) => {
         #[derive(Debug, Deserialize, PartialEq)]
         pub struct RepositorySettings {
             $(
-                $field_name: $field_type,
+                pub $field_name: $field_type,
             )*
         }
 
@@ -43,7 +52,7 @@ macro_rules! define_repository_settings {
 
                 $(
                     if let Some(v) = self.$field_name {
-                        map.insert(stringify!($xD), json!(v));
+                        map.insert(stringify!($field_name), json!(v));
                     }
                 )*
 
@@ -60,12 +69,12 @@ macro_rules! define_repository_settings {
                 return true;
             }
 
-            pub fn diff(&self, repository: &get_repositories_from_user::GetRepositoriesFromUserUserRepositoriesNodes) -> RepositorySettings {
-                return RepositorySettings {
+            pub fn diff(&self, repository: &RepositoryInfo) -> RepositorySettings {
+                RepositorySettings {
                 $(
                     $field_name: ensure_same!(self, repository, $field_name),
                 )*
-                };
+                }
             }
 
             // diff is used instead
@@ -88,7 +97,7 @@ macro_rules! define_repository_settings {
 }
 
 impl RepositorySettings {
-    pub fn load<R>(rdr: R) -> Result<RepositorySettings, anyhow::Error>
+    fn load<R>(rdr: R) -> Result<RepositorySettings, anyhow::Error>
     where
         R: Read,
     {
@@ -99,20 +108,13 @@ impl RepositorySettings {
 }
 
 define_repository_settings! {
-    allow_auto_merge : auto_merge_allowed: Option<bool>,
-    has_issues : has_issues_enabled: Option<bool>,
-    has_projects : has_projects_enabled: Option<bool>,
-    has_wiki : has_wiki_enabled: Option<bool>,
-    allow_merge_commit : merge_commit_allowed: Option<bool>,
-    allow_squash_merge : squash_merge_allowed: Option<bool>,
-    allow_rebase_merge : rebase_merge_allowed: Option<bool>,
-}
-
-pub fn load_from_file(path: &Path) -> Result<RepositorySettings, anyhow::Error> {
-    let file = File::open(path)?;
-    let reader = BufReader::new(file);
-
-    RepositorySettings::load(reader)
+    allow_auto_merge : Option<bool>,
+    has_issues : Option<bool>,
+    has_projects : Option<bool>,
+    has_wiki : Option<bool>,
+    allow_merge_commit : Option<bool>,
+    allow_squash_merge : Option<bool>,
+    allow_rebase_merge : Option<bool>,
 }
 
 #[cfg(test)]
@@ -136,7 +138,7 @@ mod tests {
         assert_ne!(
             settings,
             RepositorySettings {
-                auto_merge_allowed: Some(false),
+                // auto_merge_allowed: Some(false),
                 has_issues_enabled: None,
                 has_projects_enabled: Some(false),
                 has_wiki_enabled: None,
@@ -148,7 +150,7 @@ mod tests {
         assert_eq!(
             settings,
             RepositorySettings {
-                auto_merge_allowed: Some(true),
+                // auto_merge_allowed: Some(true),
                 has_issues_enabled: None,
                 has_projects_enabled: Some(false),
                 has_wiki_enabled: None,

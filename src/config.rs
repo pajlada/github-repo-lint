@@ -5,6 +5,7 @@ use std::path::Path;
 
 use crate::branch_protection_rules::BranchProtectionRules;
 use crate::repository_settings::RepositorySettings;
+use crate::topic_operation::TopicOperations;
 
 fn default_github_api_root() -> String {
     "https://api.github.com".to_string()
@@ -17,6 +18,7 @@ pub struct Config {
 
     pub repository_settings: RepositorySettings,
     pub branch_protection_rules: BranchProtectionRules,
+    pub topics: TopicOperations,
 }
 
 impl Config {
@@ -25,6 +27,10 @@ impl Config {
         R: Read,
     {
         let config: Config = serde_json::from_reader(rdr)?;
+
+        for (pattern, rule) in &config.branch_protection_rules {
+            rule.validate(pattern)?;
+        }
 
         Ok(config)
     }
