@@ -50,7 +50,7 @@ The `topics` config key expects a list of operations
 
 Ensure `prod` topic exists, `hacktoberfest` topic does not exist, and if the `pajbot2020` topic exists, it's renamed to `pajbot2021`.
 
-```
+```json
 {
   ...,
   "topics": [
