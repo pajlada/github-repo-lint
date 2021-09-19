@@ -32,7 +32,7 @@
     {
       "__comment": "If the repo has a topic with the name `old_name`, rename it to `name`. If both `old_name` and `name` exists, `old_name` will be deleted",
       "operation": "rename",
-      "old_name": "foo",
+      "old_name": "xd",
       "name": "foobar"
     }
   ],
