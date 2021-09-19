@@ -166,18 +166,18 @@ dependencies = [
 
 [[package]]
 name = "const_format"
-version = "0.2.19"
+version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59c7d3aa11be45d56befebb10f4a8785fcb62aabddf5f33638efef922e505ec9"
+checksum = "4556f63e28a78fa5e6f310cfea5647a25636def49a338ab69e33b34a3382057b"
 dependencies = [
  "const_format_proc_macros",
 ]
 
 [[package]]
 name = "const_format_proc_macros"
-version = "0.2.14"
+version = "0.2.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29c36c619c422113552db4eb28cddba8faa757e33f758cc3415bd2885977b591"
+checksum = "552782506c398da94466b364973b563887e0ca078bf33a76d4163736165e3594"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1026,9 +1026,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.67"
+version = "1.0.68"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7f9e390c27c3c0ce8bc5d725f6e4d30a29d26659494aa4b17535f7522c5c950"
+checksum = "0f690853975602e1bfe1ccbf50504d67174e3bcf340f23b5ea9992e0587a52d8"
 dependencies = [
  "itoa",
  "ryu",
