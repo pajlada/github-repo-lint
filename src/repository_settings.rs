@@ -3,20 +3,12 @@ use serde_json::json;
 use std::collections::HashMap;
 use std::io::Read;
 
-use log::*;
-
 use crate::models::RepositoryInfo;
 
 macro_rules! ensure_same {
     ($s:ident, $r:ident, $field_name:ident) => {
         if let Some(expected) = $s.$field_name {
             if let Some(actual) = $r.$field_name {
-                // info!(
-                //     "Comparing ({}) e:{} to a:{}",
-                //     stringify!($field_name),
-                //     expected,
-                //     actual
-                // );
                 if expected != actual {
                     Some(expected)
                 } else {
@@ -97,6 +89,7 @@ macro_rules! define_repository_settings {
 }
 
 impl RepositorySettings {
+    #[allow(dead_code)]
     fn load<R>(rdr: R) -> Result<RepositorySettings, anyhow::Error>
     where
         R: Read,
@@ -122,41 +115,41 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_load_repository_settings() -> Result<(), anyhow::Error> {
+    fn test_load_repository_settings() -> anyhow::Result<()> {
         let contents = r#"
 {
-  "auto_merge_allowed": true,
-  "has_issues_enabled": null,
-  "has_projects_enabled": false,
-  "has_wiki_enabled": null,
-  "merge_commit_allowed": false,
-  "squash_merge_allowed": true,
-  "rebase_merge_allowed": false
+  "allow_auto_merge": true,
+  "has_issues": null,
+  "has_projects": false,
+  "has_wiki": null,
+  "allow_merge_commit": false,
+  "allow_squash_merge": true,
+  "allow_rebase_merge": false
 }"#;
         let reader = std::io::Cursor::new(contents);
         let settings = RepositorySettings::load(reader)?;
         assert_ne!(
             settings,
             RepositorySettings {
-                // auto_merge_allowed: Some(false),
-                has_issues_enabled: None,
-                has_projects_enabled: Some(false),
-                has_wiki_enabled: None,
-                merge_commit_allowed: Some(false),
-                squash_merge_allowed: Some(true),
-                rebase_merge_allowed: Some(false),
+                allow_auto_merge: Some(false),
+                has_issues: None,
+                has_projects: Some(false),
+                has_wiki: None,
+                allow_merge_commit: Some(false),
+                allow_squash_merge: Some(true),
+                allow_rebase_merge: Some(false),
             }
         );
         assert_eq!(
             settings,
             RepositorySettings {
-                // auto_merge_allowed: Some(true),
-                has_issues_enabled: None,
-                has_projects_enabled: Some(false),
-                has_wiki_enabled: None,
-                merge_commit_allowed: Some(false),
-                squash_merge_allowed: Some(true),
-                rebase_merge_allowed: Some(false),
+                allow_auto_merge: Some(true),
+                has_issues: None,
+                has_projects: Some(false),
+                has_wiki: None,
+                allow_merge_commit: Some(false),
+                allow_squash_merge: Some(true),
+                allow_rebase_merge: Some(false),
             }
         );
 

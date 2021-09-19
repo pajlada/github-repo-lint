@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use serde_json::json;
+// use serde_json::json;
 use std::collections::HashMap;
 use std::io::Read;
 
@@ -7,6 +7,7 @@ use std::io::Read;
 
 pub type BranchProtectionRules = HashMap<String, BranchProtectionRule>;
 
+#[allow(unused_macros)]
 macro_rules! ensure_same {
     ($s:ident, $r:ident, $field_name:ident) => {
         if let Some(expected) = $s.$field_name {
@@ -164,6 +165,7 @@ impl BranchProtectionRule {
     }
 }
 
+#[allow(dead_code)]
 pub fn load_from_reader<R>(rdr: R) -> Result<BranchProtectionRules, anyhow::Error>
 where
     R: Read,
