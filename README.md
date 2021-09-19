@@ -2,7 +2,11 @@
 
 This project aims to help ensuring you or your organizations repositories' settings and branch protection rules conform to the standard you have set up.
 
-The standard will be specified as a json file (currently split up into two files) where values you have nulled means you do not care what the value of that is.
+The standard is configured in a single json file (see `example.config.json`).
+
+## Usage
+
+`./github-repo-normalizer --config <FILE> --user pajlada --organization pajlads`
 
 ## Update topics
 
