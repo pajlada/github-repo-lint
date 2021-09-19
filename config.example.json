@@ -1,42 +1,24 @@
 {
-  "repositories": [
-    {
-      "owner": "pajlada",
-      "name": "test"
-    },
-    {
-      "user": "pajlada",
-      "exclude": []
-    },
-    {
-      "organization": "pajlads",
-      "exclude": []
-    }
-  ],
   "topics": [
     {
-      "__comment": "All repositories selected MUST have this topic. if this topic does not exist on the repo, we will create it on the repo",
       "operation": "must_exist",
       "name": "foo"
     },
     {
-      "__comment": "All repositories selected MUST have this topic. if this topic does not exist on the repo, we will create it on the repo",
       "operation": "must_exist",
       "name": "test"
     },
     {
-      "__comment": "All repositories selected must NOT have this topic. if this topic does exist on the repo, we will delete it from the repo",
       "operation": "must_not_exist",
       "name": "cloudflare"
     },
     {
-      "__comment": "If the repo has a topic with the name `old_name`, rename it to `name`. If both `old_name` and `name` exists, `old_name` will be deleted",
       "operation": "rename",
       "old_name": "xd",
       "name": "foobar"
     }
   ],
-  "repository_settings": {
+  "settings": {
     "allow_auto_merge": true,
     "has_issues": null,
     "has_projects": null,

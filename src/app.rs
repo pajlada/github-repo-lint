@@ -21,10 +21,7 @@ pub fn run(
 ) -> anyhow::Result<()> {
     let mut repositories: Vec<Repository> = Vec::new();
 
-    info!(
-        "Expected repository settings: {:?}",
-        ctx.config.repository_settings
-    );
+    info!("Expected repository settings: {:?}", ctx.config.settings);
 
     for user in users {
         repositories.append(
@@ -209,7 +206,7 @@ impl Repository {
         let repo_owner = self.info.owner.login.as_str();
         let repo_with_owner = self.info.full_name.as_str();
 
-        let result = ctx.config.repository_settings.diff(&self.info);
+        let result = ctx.config.settings.diff(&self.info);
 
         if !result.empty() {
             // Update repository settings

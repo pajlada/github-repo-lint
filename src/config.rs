@@ -16,7 +16,7 @@ pub struct Config {
     #[serde(default = "default_github_api_root")]
     pub github_api_root: String,
 
-    pub repository_settings: RepositorySettings,
+    pub settings: RepositorySettings,
     pub branch_protection_rules: BranchProtectionRules,
     pub topics: TopicOperations,
 }
