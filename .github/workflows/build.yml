@@ -16,10 +16,13 @@ jobs:
         os: [ ubuntu, windows, macOS ]
     steps:
       - uses: actions/checkout@v2.3.4
+
       - uses: hecrj/setup-rust-action@v1.3.4
+
       - uses: Swatinem/rust-cache@v1.3.0
         with:
           key: ${{ runner.os }}
+
       # same checks as with `cargo build`, but no binaries are generated at the end, saving some time.
       - run: cargo check
 
