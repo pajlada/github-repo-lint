@@ -164,8 +164,9 @@ impl Repository {
                     final_topics.remove(name);
                 }
                 TopicOperation::Rename { old_name, name } => {
-                    final_topics.remove(old_name);
-                    final_topics.insert(name.clone());
+                    if final_topics.remove(old_name) {
+                        final_topics.insert(name.clone());
+                    }
                 }
             }
         }
