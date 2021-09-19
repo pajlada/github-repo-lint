@@ -216,7 +216,7 @@ impl Repository {
                     update_line(
                         &mut ctx.terminal,
                         format!(
-                            "Checking repository {} - found {} differing settings",
+                            "Checking repository {} settings - found {} differing settings",
                             repo_with_owner,
                             style(patch_size).cyan()
                         ),
@@ -228,7 +228,7 @@ impl Repository {
                     update_line(
                         &mut ctx.terminal,
                         format!(
-                            "Checking repository {} - updated {} differing settings\n",
+                            "Checking repository {} settings - updated {} differing settings\n",
                             repo_with_owner,
                             style(patch_size).cyan()
                         ),
@@ -241,7 +241,7 @@ impl Repository {
                     update_line(
                         &mut ctx.terminal,
                         format!(
-                            "Checking repository {} - found {} differing settings (DRY RUN)\n",
+                            "Checking repository {} settings - found {} differing settings (DRY RUN)\n",
                             repo_with_owner,
                             style(patch_size).cyan()
                         ),
@@ -256,7 +256,7 @@ impl Repository {
             ctx.terminal.clear_line()?;
             ctx.terminal.write_all(
                 gray.apply_to(format!(
-                    "Checking repository {} - nothing to change\n",
+                    "Checking repository {} settings - nothing to change\n",
                     repo_with_owner
                 ))
                 .to_string()

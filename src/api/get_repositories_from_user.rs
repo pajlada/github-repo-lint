@@ -17,7 +17,7 @@ impl Client {
         let mut pagination = PaginationData {
             next: Some(
                 self.api_root
-                    .join(format!("users/{}/repos?per_page=5", repo_owner).as_str())?,
+                    .join(format!("users/{}/repos", repo_owner).as_str())?,
             ),
         };
 
@@ -47,8 +47,6 @@ impl Client {
 
                 repos.push(self.get_repository(&repo.full_name)?);
             }
-
-            pagination.next = None;
         }
 
         terminal.write_line("").unwrap();
