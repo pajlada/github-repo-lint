@@ -21,12 +21,12 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: cargo build --release
       - name: Rename release binary
-        run: mv target/release/github-repo-normalizer target/release/github-repo-normalizer-linux-x86_64
+        run: mv target/release/github-repo-lint target/release/github-repo-lint-linux-x86_64
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            target/release/github-repo-normalizer-linux-x86_64
+            target/release/github-repo-lint-linux-x86_64
           prerelease: false
