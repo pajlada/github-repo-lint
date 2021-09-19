@@ -43,14 +43,9 @@ fn main() -> Result<(), anyhow::Error> {
                 .help("Sets the level of verbosity"),
         )
         .arg(
-            Arg::with_name("dry-run")
-                .long("dry-run")
-                .help("Dry run repository settings"),
-        )
-        .arg(
-            Arg::with_name("dry-run-bpr")
-                .long("dry-run-bpr")
-                .help("Dry run repository branch protection rules"),
+            Arg::with_name("fix")
+                .long("fix")
+                .help("Try to fix the issues found"),
         )
         .arg(
             Arg::with_name("repo")
@@ -121,8 +116,8 @@ fn main() -> Result<(), anyhow::Error> {
     let api_client = api::new(client, config.github_api_root.as_str())?;
 
     let options = options::Options {
-        dry_run: matches.is_present("dry-run"),
-        dry_run_bpr: matches.is_present("dry-run-bpr"),
+        dry_run: !matches.is_present("fix"),
+        dry_run_bpr: !matches.is_present("fix"),
     };
 
     let ctx = context::Context {

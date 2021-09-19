@@ -1,4 +1,4 @@
-# github-repo-normalizer
+# github-repo-lint
 
 This project aims to help ensuring you or your organizations repositories' settings and branch protection rules conform to the standard you have set up.
 
@@ -6,7 +6,11 @@ The standard is configured in a single json file (see `example.config.json`).
 
 ## Usage
 
-`./github-repo-normalizer --config <FILE> --user pajlada --organization pajlads`
+Look for mismatching settings  
+`./github-repo-lint --config <FILE> --user pajlada --organization pajlads`
+
+Fix mismatching settings (works for most things, see labels in the settings below for where it doesn't work)  
+`./github-repo-lint --config <FILE> --user pajlada --organization pajlads --fix`
 
 ## Update topics
 

@@ -1,5 +1,5 @@
 [package]
-name = "github-repo-normalizer"
+name = "github-repo-lint"
 description = "Lint and fix batch GitHub repositories' settings and branch protection rules according to your preferences."
 version = "0.1.0"
 edition = "2018"
