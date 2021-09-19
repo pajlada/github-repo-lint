@@ -40,8 +40,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
+
       - uses: hecrj/setup-rust-action@v1.3.4
         with:
           rust-version: stable
           components: clippy
+
+      - uses: Swatinem/rust-cache@v1.3.0
+        with:
+          key: lint
+
       - run: cargo clippy
