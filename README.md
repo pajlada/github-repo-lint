@@ -115,6 +115,10 @@ Ensure auto merging pull requests is allowed, and that only the squash pull requ
 }
 ```
 
+## Update branch protection rules
+
+⚠ Not yet implemented ⚠
+
 ## Known issues
 
 - "Default branch naming" of master and main might be interchangeable for some repositories, but for the branch protection rules it has to be strict. This could potentially be solved by having a parameter as part of the branch protection rule which says "create if it doesn't exists" or "update if it exists".
