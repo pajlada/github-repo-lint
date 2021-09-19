@@ -15,7 +15,7 @@ The `topics` config key expects a list of operations
 - `must_exist`  
    If the repository does not have the topic `name`, add it.
 
-  ```
+  ```json
   {
     "operation": "must_exist",
     "name": "hacktoberfest"
@@ -25,7 +25,7 @@ The `topics` config key expects a list of operations
 - `must_not_exist`  
   If the repository has the topic `name`, remove it.
 
-  ```
+  ```json
   {
     "operation": "must_not_exist",
     "name": "hacktoberfest"
@@ -34,7 +34,7 @@ The `topics` config key expects a list of operations
 
 - `rename`  
   If the repository has the topic `old_name`, remove it and add `name`.
-  ```
+  ```json
   {
     "operation": "rename",
     "old_name": "pajbot2020",
