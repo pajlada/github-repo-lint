@@ -81,7 +81,6 @@ fn main() -> Result<(), anyhow::Error> {
         .format_timestamp(None)
         .format_target(false)
         .filter_module(module_path!(), log_level)
-        .filter_level(log_level)
         .init();
 
     let repos: Vec<&str> = matches.values_of("repo").unwrap_or_default().collect();
