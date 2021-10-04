@@ -1,6 +1,7 @@
 use std::io::Write;
 
 use console::Term;
+use log::*;
 
 use crate::api::pagination::{get_pagination_data, PaginationData};
 use crate::api::Client;
@@ -38,6 +39,7 @@ impl Client {
             let page_repos: Vec<RepositoryListing> = response.json()?;
 
             for repo in page_repos {
+                debug!("get_repositories_from_organization repo: {:?}", repo);
                 terminal.clear_line()?;
                 terminal.write_all(
                     format!(

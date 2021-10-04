@@ -21,7 +21,10 @@ impl Client {
         let rb = self
             .client
             .patch(url)
-            .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
+            .header(
+                reqwest::header::ACCEPT,
+                "application/vnd.github.nebula-preview+json",
+            )
             .json(&patch);
         let request = rb.build()?;
         debug!(
