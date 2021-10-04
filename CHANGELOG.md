@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Major: Add the ability to modifgy the visibility of a repository. (#16)
+- Major: Add the ability to modify the visibility of a repository. (#16)
 - Dev: Only filter module log level (#14)
 - Dev: Reorder RepositoryInfo struct fields. (#15)
 
