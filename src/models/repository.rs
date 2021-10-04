@@ -19,16 +19,18 @@ pub struct RepositoryInfo {
     pub archived: bool,
     pub disabled: bool,
 
-    pub visibility: Option<String>, // optional because it doesn't exist in GHE3.0?
-    pub allow_rebase_merge: Option<bool>, // Should always be Some
-    pub allow_merge_commit: Option<bool>, // Should always be Some
-    pub allow_squash_merge: Option<bool>, // Should always be Some
+    // Exists in all tested GH environment, so should always be Some
+    pub visibility: Option<String>,
+    pub allow_rebase_merge: Option<bool>,
+    pub allow_merge_commit: Option<bool>,
+    pub allow_squash_merge: Option<bool>,
+    pub delete_branch_on_merge: Option<bool>,
+    pub has_issues: Option<bool>,
+    pub has_projects: Option<bool>,
+    pub has_downloads: Option<bool>,
+    pub has_wiki: Option<bool>,
+
     pub allow_auto_merge: Option<bool>, // Doesn't exist in GHE3.0 or GHE3.1, but available in GHE3.2
-    pub delete_branch_on_merge: Option<bool>, // Should always be Some
-    pub has_issues: Option<bool>,       // Should always be Some
-    pub has_projects: Option<bool>,     // Should always be Some
-    pub has_downloads: Option<bool>,    // Should always be Some
-    pub has_wiki: Option<bool>,         // Should always be Some
 }
 
 #[derive(Debug, Deserialize)]
