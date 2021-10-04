@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Dev: Only filter module log level (#14)
+- Dev: Reorder RepositoryInfo struct fields. (#15)
 
 ## v0.1.1
 
