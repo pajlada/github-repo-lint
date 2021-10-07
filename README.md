@@ -103,6 +103,8 @@ The `settings` config key expects an object, where the key is one of the valid k
   Enable the projects feature in the repository.
 - `has_wiki`  
   Enable the wiki feature in the repository.
+- `visibility`  
+  Set the visibility of the repository. Valid values are `private`, `public`, `internal` (for GHE only). **USE WITH CAUTION**
 
 ### Full example
 
@@ -118,7 +120,8 @@ Ensure auto merging pull requests is allowed, and that only the squash pull requ
     "has_wiki": null,
     "allow_merge_commit": false,
     "allow_squash_merge": true,
-    "allow_rebase_merge": false
+    "allow_rebase_merge": false,
+    "visibility": null
   },
 }
 ```

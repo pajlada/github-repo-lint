@@ -7,10 +7,10 @@ use crate::models::RepositoryInfo;
 
 macro_rules! ensure_same {
     ($s:ident, $r:ident, $field_name:ident) => {
-        if let Some(expected) = $s.$field_name {
-            if let Some(actual) = $r.$field_name {
+        if let Some(expected) = &$s.$field_name {
+            if let Some(actual) = &$r.$field_name {
                 if expected != actual {
-                    Some(expected)
+                    Some(expected.clone())
                 } else {
                     None
                 }
@@ -43,7 +43,7 @@ macro_rules! define_repository_settings {
                 let mut map = HashMap::new();
 
                 $(
-                    if let Some(v) = self.$field_name {
+                    if let Some(v) = &self.$field_name {
                         map.insert(stringify!($field_name), json!(v));
                     }
                 )*
@@ -101,6 +101,7 @@ impl RepositorySettings {
 }
 
 define_repository_settings! {
+    visibility : Option<String>,
     allow_auto_merge : Option<bool>,
     has_issues : Option<bool>,
     has_projects : Option<bool>,
@@ -131,6 +132,7 @@ mod tests {
         assert_ne!(
             settings,
             RepositorySettings {
+                visibility: None,
                 allow_auto_merge: Some(false),
                 has_issues: None,
                 has_projects: Some(false),
@@ -143,6 +145,7 @@ mod tests {
         assert_eq!(
             settings,
             RepositorySettings {
+                visibility: None,
                 allow_auto_merge: Some(true),
                 has_issues: None,
                 has_projects: Some(false),

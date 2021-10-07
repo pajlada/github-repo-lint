@@ -1,3 +1,5 @@
+use log::*;
+
 use crate::api::Client;
 use crate::models::RepositoryInfo;
 
@@ -10,9 +12,16 @@ impl Client {
         let response = self
             .client
             .get(url)
-            .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
+            .header(
+                reqwest::header::ACCEPT,
+                "application/vnd.github.nebula-preview+json",
+            )
             .send()?;
 
-        Ok(response.json()?)
+        let result: RepositoryInfo = response.json()?;
+
+        debug!("get_repository_info result: {:?}", result);
+
+        Ok(result)
     }
 }
