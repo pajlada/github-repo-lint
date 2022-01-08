@@ -28,8 +28,8 @@ fn main() -> Result<(), anyhow::Error> {
         .author(clap::crate_authors!())
         .about(clap::crate_description!())
         .arg(
-            Arg::with_name("config")
-                .short("c")
+            Arg::new("config")
+                .short('c')
                 .long("config")
                 .value_name("FILE")
                 .help("Path to config file to use")
@@ -37,35 +37,35 @@ fn main() -> Result<(), anyhow::Error> {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("v")
-                .short("v")
-                .multiple(true)
+            Arg::new("v")
+                .short('v')
+                .multiple_occurrences(true)
                 .help("Sets the level of verbosity"),
         )
         .arg(
-            Arg::with_name("fix")
+            Arg::new("fix")
                 .long("fix")
                 .help("Try to fix the issues found"),
         )
         .arg(
-            Arg::with_name("repo")
+            Arg::new("repo")
                 .long("repo")
-                .multiple(true)
+                .multiple_occurrences(true)
                 .help("Target GitHub repository")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("user")
+            Arg::new("user")
                 .long("user")
-                .multiple(true)
+                .multiple_occurrences(true)
                 .help("Target GitHub user")
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("organization")
+            Arg::new("organization")
                 .long("organization")
                 .alias("org")
-                .multiple(true)
+                .multiple_occurrences(true)
                 .help("Target GitHub organization")
                 .takes_value(true),
         )
