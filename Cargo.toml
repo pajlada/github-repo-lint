@@ -15,6 +15,6 @@ anyhow = "^1.0"
 log = "^0.4"
 env_logger = "^0.9"
 const_format = "^0.2"
-clap = "^3.0"
+clap = { version = "^3.0", features = ["derive", "cargo"] }
 duplicate = "^0.3"
 console = "^0.15"
