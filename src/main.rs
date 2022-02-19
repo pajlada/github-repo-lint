@@ -1,5 +1,5 @@
 use ::reqwest::blocking::Client;
-use clap::{App, Arg};
+use clap::{Arg, Command};
 use console::Term;
 
 use const_format::formatcp;
@@ -23,7 +23,7 @@ const USER_AGENT: &str = formatcp!("{}/{}", PKG_NAME, PKG_VERSION);
 fn main() -> Result<(), anyhow::Error> {
     let terminal = Term::stdout();
 
-    let matches = App::new(clap::crate_name!())
+    let matches = Command::new(clap::crate_name!())
         .version(clap::crate_version!())
         .author(clap::crate_authors!())
         .about(clap::crate_description!())
