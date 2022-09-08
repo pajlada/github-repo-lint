@@ -25,7 +25,7 @@ macro_rules! ensure_same {
 
 macro_rules! define_branch_protection_rule {
     ( $( $json_field_name:ident : $field_name:ident : $field_type:ty, )* ) => {
-        #[derive(Debug, Deserialize, PartialEq)]
+        #[derive(Debug, Deserialize, PartialEq, Eq)]
         pub struct BranchProtectionRule {
             required_approving_review_count: Option<i64>,
             required_status_check_contexts: Option<Vec<String>>,

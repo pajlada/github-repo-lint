@@ -25,7 +25,7 @@ macro_rules! ensure_same {
 
 macro_rules! define_repository_settings {
     ( $( $field_name:ident : $field_type:ty, )* ) => {
-        #[derive(Debug, Deserialize, PartialEq)]
+        #[derive(Debug, Deserialize, PartialEq, Eq)]
         pub struct RepositorySettings {
             $(
                 pub $field_name: $field_type,
