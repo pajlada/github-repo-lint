@@ -11,7 +11,7 @@ fn default_github_api_root() -> String {
     "https://api.github.com".to_string()
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Eq)]
 pub struct Config {
     #[serde(default = "default_github_api_root")]
     pub github_api_root: String,
