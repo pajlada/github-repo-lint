@@ -2,7 +2,7 @@
 name = "github-repo-lint"
 description = "Lint and fix batch GitHub repositories' settings and branch protection rules according to your preferences."
 version = "0.1.1"
-edition = "2018"
+edition = "2021"
 include = ["files/*.graphql"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
