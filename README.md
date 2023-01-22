@@ -2,7 +2,7 @@
 
 This project aims to help ensuring you or your organizations repositories' settings and branch protection rules conform to the standard you have set up.
 
-The standard is configured in a single json file (see `example.config.json`).
+The standard is configured in a single json file (see `config.example.json`).
 
 ## Usage
 
