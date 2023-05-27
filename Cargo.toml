@@ -15,5 +15,5 @@ anyhow = "1.0"
 log = "0.4"
 env_logger = "0.10"
 const_format = "0.2"
-clap = { version = "4.2", features = ["cargo"] }
+clap = { version = "4.3", features = ["cargo"] }
 console = "0.15"
