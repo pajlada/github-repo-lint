@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: hecrj/setup-rust-action@v1.4.1
+      - uses: hecrj/setup-rust-action@v2.0.0
 
       - uses: Swatinem/rust-cache@v2.6.2
         with:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: hecrj/setup-rust-action@v1.4.1
+      - uses: hecrj/setup-rust-action@v2.0.0
         with:
           rust-version: stable
           components: rustfmt
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: hecrj/setup-rust-action@v1.4.1
+      - uses: hecrj/setup-rust-action@v2.0.0
         with:
           rust-version: stable
           components: clippy
