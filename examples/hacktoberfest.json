@@ -1,0 +1,10 @@
+{
+  "topics": [
+    {
+      "operation": "must_exist",
+      "name": "hacktoberfest"
+    }
+  ],
+  "settings": {},
+  "branch_protection_rules": {}
+}

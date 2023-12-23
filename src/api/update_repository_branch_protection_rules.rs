@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::api::Client;
-use ::reqwest::blocking::Response;
+use reqwest::blocking::Response;
 
 impl Client {
     #[allow(dead_code)]

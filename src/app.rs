@@ -5,7 +5,7 @@ use crate::models::Repository;
 use crate::topic_operation::TopicOperation;
 
 use console::{style, Style, Term};
-use log::*;
+use tracing::{debug, error, info};
 
 fn update_line<S: Into<String>>(terminal: &mut Term, msg: S) {
     terminal.clear_line().unwrap();

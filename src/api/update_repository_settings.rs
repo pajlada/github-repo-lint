@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use ::reqwest::blocking::Response;
-use log::*;
+use reqwest::blocking::Response;
+use tracing::debug;
 
 use crate::api::Client;
 

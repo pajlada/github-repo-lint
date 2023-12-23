@@ -1,17 +1,13 @@
 mod pagination;
 
-mod get_repositories_from_organization;
-mod get_repositories_from_user;
-mod get_repository;
-mod get_repository_info;
-mod get_repository_topics;
+mod get_repositories;
 
 mod update_repository_branch_protection_rules;
 mod update_repository_settings;
 mod update_repository_topics;
 
-use ::reqwest::blocking::Client as r_client;
-use ::reqwest::Url;
+use reqwest::blocking::Client as r_client;
+use reqwest::Url;
 
 pub struct Client {
     client: r_client,

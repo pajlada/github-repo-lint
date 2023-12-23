@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use ::reqwest::StatusCode;
-use log::*;
+use reqwest::StatusCode;
 use serde_json::json;
+use tracing::info;
 
 use crate::api::Client;
 
