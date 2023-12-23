@@ -25,7 +25,7 @@ impl Client {
         let rb = self
             .client
             .post(url)
-            .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
+            .header(reqwest::header::ACCEPT, "application/vnd.github+json")
             .json(&patch);
 
         let request = rb.build()?;

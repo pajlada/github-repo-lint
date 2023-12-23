@@ -12,10 +12,7 @@ impl Client {
         let response = self
             .client
             .get(url)
-            .header(
-                reqwest::header::ACCEPT,
-                "application/vnd.github.nebula-preview+json",
-            )
+            .header(reqwest::header::ACCEPT, "application/vnd.github+json")
             .send()?;
 
         let result: RepositoryInfo = response.json()?;
