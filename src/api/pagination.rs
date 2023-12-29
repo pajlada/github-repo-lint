@@ -1,4 +1,4 @@
-use ::reqwest::Url;
+use reqwest::Url;
 
 pub(super) struct PaginationData {
     pub next: Option<Url>,
