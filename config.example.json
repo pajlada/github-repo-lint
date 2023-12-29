@@ -1,63 +1,63 @@
 {
-  "topics": [
-    {
-      "operation": "must_exist",
-      "name": "foo"
+    "topics": [
+        {
+            "operation": "must_exist",
+            "name": "foo"
+        },
+        {
+            "operation": "must_exist",
+            "name": "test"
+        },
+        {
+            "operation": "must_not_exist",
+            "name": "cloudflare"
+        },
+        {
+            "operation": "rename",
+            "old_name": "xd",
+            "name": "foobar"
+        }
+    ],
+    "settings": {
+        "visibility": null,
+        "allow_auto_merge": true,
+        "has_issues": null,
+        "has_projects": null,
+        "has_wiki": null,
+        "allow_merge_commit": false,
+        "allow_squash_merge": true,
+        "allow_rebase_merge": false
     },
-    {
-      "operation": "must_exist",
-      "name": "test"
-    },
-    {
-      "operation": "must_not_exist",
-      "name": "cloudflare"
-    },
-    {
-      "operation": "rename",
-      "old_name": "xd",
-      "name": "foobar"
+    "branch_protection_rules": {
+        "master": {
+            "__comment_is_admin_enforced": "Include administrators - Enforce all configured restrictions above for administrators.",
+            "__tested_is_admin_enforced": true,
+            "is_admin_enforced": true,
+
+            "__comment_required_approving_review_count": "doesn't work",
+            "required_approving_review_count": null,
+
+            "__comment_required_status_check_contexts": "Not yet implemented, handles null fine",
+            "__example_required_status_check_contexts": [
+                "build-$REPONAME",
+                "lint-$REPONAME"
+            ],
+            "required_status_check_contexts": null,
+            "__comment_requires_commit_signatures": "doesn't work because REST api doesn't support it",
+            "requires_commit_signatures": null,
+            "requires_linear_history": true,
+
+            "requires_conversation_resolution": null,
+
+            "__comment_requires_status_checks": "these two values are a bit special as they are kind of codependant. figure out which values are invalid before trying to diff",
+            "requires_status_checks": true,
+            "requires_strict_status_checks": true,
+
+            "__comment_allows_force_pushes": "Allow force pushes - Permit force pushes for all users with push access.",
+            "allows_force_pushes": false,
+
+            "__comment_allows_deletions": "Allow deletions - Allow users with push access to delete matching branches.",
+            "allows_deletions": false
+        }
     }
-  ],
-  "settings": {
-    "visibility": null,
-    "allow_auto_merge": true,
-    "has_issues": null,
-    "has_projects": null,
-    "has_wiki": null,
-    "allow_merge_commit": false,
-    "allow_squash_merge": true,
-    "allow_rebase_merge": false
-  },
-  "branch_protection_rules": {
-    "master": {
-      "__comment_is_admin_enforced": "Include administrators - Enforce all configured restrictions above for administrators.",
-      "__tested_is_admin_enforced": true,
-      "is_admin_enforced": true,
-
-      "__comment_required_approving_review_count": "doesn't work",
-      "required_approving_review_count": null,
-
-      "__comment_required_status_check_contexts": "Not yet implemented, handles null fine",
-      "__example_required_status_check_contexts": [
-        "build-$REPONAME",
-        "lint-$REPONAME"
-      ],
-      "required_status_check_contexts": null,
-      "__comment_requires_commit_signatures": "doesn't work because REST api doesn't support it",
-      "requires_commit_signatures": null,
-      "requires_linear_history": true,
-
-      "requires_conversation_resolution": null,
-
-      "__comment_requires_status_checks": "these two values are a bit special as they are kind of codependant. figure out which values are invalid before trying to diff",
-      "requires_status_checks": true,
-      "requires_strict_status_checks": true,
-
-      "__comment_allows_force_pushes": "Allow force pushes - Permit force pushes for all users with push access.",
-      "allows_force_pushes": false,
-
-      "__comment_allows_deletions": "Allow deletions - Allow users with push access to delete matching branches.",
-      "allows_deletions": false
-    }
-  }
 }
