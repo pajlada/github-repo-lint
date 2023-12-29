@@ -1,28 +1,28 @@
 name: Check formatting
 
 on:
-    push:
-        branches:
-            - master
-    pull_request:
-    merge_group:
+  push:
+    branches:
+      - master
+  pull_request:
+  merge_group:
 
 concurrency:
-    group: check-formatting-${{ github.ref }}
-    cancel-in-progress: true
+  group: check-formatting-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    check:
-        runs-on: ubuntu-22.04
+  check:
+    runs-on: ubuntu-22.04
 
-        steps:
-            - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Check formatting with Prettier
-              uses: actionsx/prettier@v3
-              with:
-                  # prettier CLI arguments.
-                  args: --write .
-            - name: Show Prettier diff
-              run: git --no-pager diff --exit-code --color=never
-              shell: bash
+      - name: Check formatting with Prettier
+        uses: actionsx/prettier@v3
+        with:
+          # prettier CLI arguments.
+          args: --write .
+      - name: Show Prettier diff
+        run: git --no-pager diff --exit-code --color=never
+        shell: bash

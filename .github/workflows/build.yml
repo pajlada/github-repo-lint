@@ -7,13 +7,12 @@ on:
       - master
   pull_request:
 
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: [ ubuntu, windows ]
+        os: [ubuntu, windows]
     steps:
       - uses: actions/checkout@v4
 
