@@ -207,25 +207,7 @@ impl Repository {
             }
         }
 
-        if self.topics.names != final_topics {
-            if ctx.options.dry_run {
-                println!(
-                    "Checking repository {} topics - add({:?}), del({:?}) (DRY RUN)",
-                    self.info.full_name,
-                    final_topics.difference(&self.topics.names),
-                    self.topics.names.difference(&final_topics),
-                );
-            } else {
-                println!(
-                    "Checking repository {} topics - add({:?}), del({:?})",
-                    self.info.full_name,
-                    final_topics.difference(&self.topics.names),
-                    self.topics.names.difference(&final_topics),
-                );
-                ctx.api_client
-                    .update_repository_topics(self.info.full_name.as_str(), final_topics)?;
-            }
-        } else {
+        if self.topics.names == final_topics {
             let gray = Style::new().color256(242);
             println!(
                 "{}",
@@ -234,6 +216,22 @@ impl Repository {
                     self.info.full_name
                 ))
             );
+        } else if ctx.options.dry_run {
+            println!(
+                "Checking repository {} topics - add({:?}), del({:?}) (DRY RUN)",
+                self.info.full_name,
+                final_topics.difference(&self.topics.names),
+                self.topics.names.difference(&final_topics),
+            );
+        } else {
+            println!(
+                "Checking repository {} topics - add({:?}), del({:?})",
+                self.info.full_name,
+                final_topics.difference(&self.topics.names),
+                self.topics.names.difference(&final_topics),
+            );
+            ctx.api_client
+                .update_repository_topics(self.info.full_name.as_str(), final_topics)?;
         }
 
         Ok(())
@@ -252,12 +250,38 @@ impl Repository {
 
         let result = settings.diff(&self.info);
 
-        if !result.empty() {
+        if result.empty() {
+            ctx.terminal.clear_line()?;
+            ctx.terminal.write_all(
+                gray.apply_to(format!(
+                    "Checking repository {repo_with_owner} settings - nothing to change\n"
+                ))
+                .to_string()
+                .as_bytes(),
+            )?;
+        } else {
             // Update repository settings
             let patch = result.dump_patch();
             if !patch.is_empty() {
                 let patch_size = patch.len();
-                if !ctx.options.dry_run {
+                if ctx.options.dry_run {
+                    debug!(
+                        "DRY RUN: Update repository {} settings with patch {:?}",
+                        repo_with_owner, patch
+                    );
+                    update_line(
+                        &mut ctx.terminal,
+                        format!(
+                            "Checking repository {} settings - found {} differing settings (DRY RUN)\n",
+                            repo_with_owner,
+                            style(patch_size).cyan()
+                        ),
+                    );
+
+                    for (k, v) in &patch {
+                        println!("    Set {k} to {v}");
+                    }
+                } else {
                     update_line(
                         &mut ctx.terminal,
                         format!(
@@ -278,34 +302,8 @@ impl Repository {
                             style(patch_size).cyan()
                         ),
                     );
-                } else {
-                    debug!(
-                        "DRY RUN: Update repository {} settings with patch {:?}",
-                        repo_with_owner, patch
-                    );
-                    update_line(
-                        &mut ctx.terminal,
-                        format!(
-                            "Checking repository {} settings - found {} differing settings (DRY RUN)\n",
-                            repo_with_owner,
-                            style(patch_size).cyan()
-                        ),
-                    );
-
-                    for (k, v) in &patch {
-                        println!("    Set {k} to {v}");
-                    }
                 }
             }
-        } else {
-            ctx.terminal.clear_line()?;
-            ctx.terminal.write_all(
-                gray.apply_to(format!(
-                    "Checking repository {repo_with_owner} settings - nothing to change\n"
-                ))
-                .to_string()
-                .as_bytes(),
-            )?;
         }
 
         Ok(())
