@@ -10,7 +10,7 @@ impl Client {
     pub fn update_repository_topics(
         &self,
         repo_full_name: &str,
-        topics: HashSet<String>,
+        topics: &HashSet<String>,
     ) -> anyhow::Result<()> {
         let url = self
             .api_root

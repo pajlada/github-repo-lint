@@ -10,7 +10,7 @@ impl Client {
         &self,
         repo_owner: &str,
         repo_name: &str,
-        patch: HashMap<&str, serde_json::Value>,
+        patch: &HashMap<&str, serde_json::Value>,
     ) -> Result<Response, anyhow::Error> {
         let url = self
             .api_root

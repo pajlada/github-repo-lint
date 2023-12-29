@@ -231,7 +231,7 @@ impl Repository {
                 self.topics.names.difference(&final_topics),
             );
             ctx.api_client
-                .update_repository_topics(self.info.full_name.as_str(), final_topics)?;
+                .update_repository_topics(self.info.full_name.as_str(), &final_topics)?;
         }
 
         Ok(())
@@ -292,7 +292,7 @@ impl Repository {
                     );
                     let response = ctx
                         .api_client
-                        .update_repository_settings(repo_owner, repo_name, patch)?;
+                        .update_repository_settings(repo_owner, repo_name, &patch)?;
                     debug!("Response: {:?}", response);
                     update_line(
                         &mut ctx.terminal,
