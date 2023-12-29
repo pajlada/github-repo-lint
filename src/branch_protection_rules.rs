@@ -76,7 +76,7 @@ impl BranchProtectionRule {
 
 #[cfg(test)]
 mod tests {
-    use crate::config::load_config_from_reader;
+    use crate::config::load_from_reader;
 
     use super::*;
 
@@ -91,7 +91,7 @@ mod tests {
 }
 ]}"#;
         let reader = std::io::Cursor::new(contents);
-        let actual_rules = load_config_from_reader(reader)?;
+        let actual_rules = load_from_reader(reader)?;
         let expected_rules: Vec<BranchProtectionRule> = vec![BranchProtectionRule {
             branch_name_pattern: "master".to_string(),
             operation: BranchProtectionOperation::MayExist,

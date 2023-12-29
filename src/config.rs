@@ -22,13 +22,13 @@ pub struct Config {
     pub topics: Option<TopicOperations>,
 }
 
-pub fn load_config_from_reader<R: std::io::Read>(reader: R) -> Result<Config> {
+pub fn load_from_reader<R: std::io::Read>(reader: R) -> Result<Config> {
     Ok(serde_json::from_reader(reader)?)
 }
 
-pub fn load_config(path: &Path) -> Result<Config> {
+pub fn load(path: &Path) -> Result<Config> {
     let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    load_config_from_reader(reader)
+    load_from_reader(reader)
 }

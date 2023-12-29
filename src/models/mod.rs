@@ -1,8 +1,8 @@
-mod branch_protection;
-mod branch_protection_update;
-mod de;
-mod repository;
-mod repository_owner;
+pub mod branch_protection;
+pub mod branch_protection_update;
+pub mod de;
+pub mod repository;
+pub mod repository_owner;
 
 pub use branch_protection::*;
 pub use branch_protection_update::*;

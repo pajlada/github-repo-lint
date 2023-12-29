@@ -3,15 +3,13 @@ use serde::Serialize;
 use super::{BranchProtection, ProtectedBranchRequiredStatusCheckChecksItem};
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-pub struct BranchProtectionUpdateRequiredStatusCheck {
+pub struct RequiredStatusCheck {
     context: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     app_id: Option<i64>,
 }
 
-impl From<&ProtectedBranchRequiredStatusCheckChecksItem>
-    for BranchProtectionUpdateRequiredStatusCheck
-{
+impl From<&ProtectedBranchRequiredStatusCheckChecksItem> for RequiredStatusCheck {
     fn from(check: &ProtectedBranchRequiredStatusCheckChecksItem) -> Self {
         Self {
             context: check.context.clone(),
@@ -21,9 +19,9 @@ impl From<&ProtectedBranchRequiredStatusCheckChecksItem>
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-pub struct BranchProtectionUpdateRequiredStatusChecks {
+pub struct RequiredStatusChecks {
     strict: bool,
-    checks: Vec<BranchProtectionUpdateRequiredStatusCheck>,
+    checks: Vec<RequiredStatusCheck>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
@@ -34,7 +32,7 @@ pub struct ListOfUserTeamsOrApps {
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-pub struct BranchProtectionUpdateRequiredPullRequestReviews {
+pub struct RequiredPullRequestReviews {
     dismissal_restrictions: ListOfUserTeamsOrApps,
     strict: bool,
     dismiss_stale_reviews: bool,
@@ -46,18 +44,18 @@ pub struct BranchProtectionUpdateRequiredPullRequestReviews {
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-pub struct BranchProtectionUpdateRestrictions {
+pub struct Restrictions {
     // TODO: Fix
     strict: bool,
-    checks: Vec<BranchProtectionUpdateRequiredStatusCheck>,
+    checks: Vec<RequiredStatusCheck>,
 }
 
 #[derive(Default, Debug, Clone, Serialize, PartialEq, Eq)]
 pub struct BranchProtectionUpdate {
-    pub required_status_checks: Option<BranchProtectionUpdateRequiredStatusChecks>,
+    pub required_status_checks: Option<RequiredStatusChecks>,
     pub enforce_admins: Option<bool>,
-    pub required_pull_request_reviews: Option<BranchProtectionUpdateRequiredPullRequestReviews>,
-    pub restrictions: Option<BranchProtectionUpdateRestrictions>,
+    pub required_pull_request_reviews: Option<RequiredPullRequestReviews>,
+    pub restrictions: Option<Restrictions>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub required_linear_history: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -78,7 +76,7 @@ impl From<&BranchProtection> for BranchProtectionUpdate {
     fn from(branch_protection: &BranchProtection) -> Self {
         Self {
             required_status_checks: branch_protection.required_status_checks.as_ref().map(
-                |required_status_checks| BranchProtectionUpdateRequiredStatusChecks {
+                |required_status_checks| RequiredStatusChecks {
                     strict: required_status_checks.strict.unwrap_or(false),
                     checks: required_status_checks
                         .checks
@@ -91,19 +89,17 @@ impl From<&BranchProtection> for BranchProtectionUpdate {
             required_pull_request_reviews: branch_protection
                 .required_pull_request_reviews
                 .as_ref()
-                .map(|required_pull_request_reviews| {
-                    BranchProtectionUpdateRequiredPullRequestReviews {
-                        dismissal_restrictions: todo!(),
-                        strict: todo!(),
-                        dismiss_stale_reviews: todo!(),
-                        require_codeowner_reviews: todo!(),
-                        required_approving_review_count: required_pull_request_reviews
-                            .required_approving_review_count
-                            .unwrap_or(0),
-                        require_last_push_approval: required_pull_request_reviews
-                            .require_last_push_approval,
-                        bypass_pull_request_allowances: todo!(),
-                    }
+                .map(|required_pull_request_reviews| RequiredPullRequestReviews {
+                    dismissal_restrictions: todo!(),
+                    strict: todo!(),
+                    dismiss_stale_reviews: todo!(),
+                    require_codeowner_reviews: todo!(),
+                    required_approving_review_count: required_pull_request_reviews
+                        .required_approving_review_count
+                        .unwrap_or(0),
+                    require_last_push_approval: required_pull_request_reviews
+                        .require_last_push_approval,
+                    bypass_pull_request_allowances: todo!(),
                 }),
             restrictions: None,
 
@@ -197,14 +193,14 @@ mod tests {
             }),
         );
         let expected_branch_protection_update = BranchProtectionUpdate {
-            required_status_checks: Some(BranchProtectionUpdateRequiredStatusChecks {
+            required_status_checks: Some(RequiredStatusChecks {
                 strict: true,
                 checks: vec![
-                    BranchProtectionUpdateRequiredStatusCheck {
+                    RequiredStatusCheck {
                         app_id: Some(15368),
                         context: "build (ubuntu)".to_string(),
                     },
-                    BranchProtectionUpdateRequiredStatusCheck {
+                    RequiredStatusCheck {
                         app_id: None,
                         context: "build (windows)".to_string(),
                     },

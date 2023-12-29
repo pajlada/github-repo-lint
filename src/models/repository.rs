@@ -5,13 +5,13 @@ use serde::Deserialize;
 use crate::models::RepositoryOwner;
 
 #[derive(Debug, Deserialize)]
-pub struct RepositoryListing {
+pub struct Listing {
     pub name: String,      // e.g. lidl-normalize
     pub full_name: String, // e.g. pajlada/lidl-normalize
 }
 
 #[derive(Debug, Deserialize)]
-pub struct RepositoryInfo {
+pub struct Info {
     pub name: String,
     pub full_name: String,
     pub owner: RepositoryOwner,
@@ -34,11 +34,11 @@ pub struct RepositoryInfo {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct RepositoryTopics {
+pub struct Topics {
     pub names: HashSet<String>,
 }
 
 pub struct Repository {
-    pub info: RepositoryInfo,
-    pub topics: RepositoryTopics,
+    pub info: Info,
+    pub topics: Topics,
 }

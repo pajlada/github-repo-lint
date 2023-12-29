@@ -1,6 +1,7 @@
 #![warn(clippy::all)]
 #![warn(clippy::pedantic)]
 #![warn(clippy::cargo)]
+#![allow(clippy::struct_excessive_bools)]
 
 #[allow(unused_imports)]
 use tracing::{debug, info};
@@ -91,7 +92,7 @@ fn main() -> Result<(), anyhow::Error> {
 
     let config_path = Path::new(matches.get_one::<String>("config").unwrap());
 
-    let config = config::load_config(config_path)?;
+    let config = config::load(config_path)?;
 
     let github_api_token = std::env::var("GITHUB_API_TOKEN").map_err(|_| {
         anyhow::anyhow!(

@@ -2,7 +2,8 @@ use anyhow::Result;
 use tracing::debug;
 
 use crate::api::Client;
-use crate::models::{Repository, RepositoryInfo, RepositoryListing, RepositoryTopics};
+use crate::models::repository;
+use crate::models::repository::Repository;
 use std::io::Write;
 
 use console::Term;
@@ -17,7 +18,7 @@ impl Client {
         })
     }
 
-    pub fn get_repository_info(&self, repo_owner_and_name: &str) -> Result<RepositoryInfo> {
+    pub fn get_repository_info(&self, repo_owner_and_name: &str) -> Result<repository::Info> {
         let url = self
             .api_root
             .join(format!("repos/{repo_owner_and_name}").as_str())?;
@@ -27,7 +28,7 @@ impl Client {
         Ok(response.json()?)
     }
 
-    pub fn get_repository_topics(&self, repo_owner_and_name: &str) -> Result<RepositoryTopics> {
+    pub fn get_repository_topics(&self, repo_owner_and_name: &str) -> Result<repository::Topics> {
         let url = self
             .api_root
             .join(format!("repos/{repo_owner_and_name}/topics").as_str())?;
@@ -59,7 +60,7 @@ impl Client {
             // Read pagination from headers
             pagination = get_pagination_data(response.headers())?;
 
-            let page_repos: Vec<RepositoryListing> = response.json()?;
+            let page_repos: Vec<repository::Listing> = response.json()?;
 
             for repo in page_repos {
                 terminal.clear_line()?;
@@ -103,7 +104,7 @@ impl Client {
             // Read pagination from headers
             pagination = get_pagination_data(response.headers())?;
 
-            let page_repos: Vec<RepositoryListing> = response.json()?;
+            let page_repos: Vec<repository::Listing> = response.json()?;
 
             for repo in page_repos {
                 debug!("get_repositories_from_organization repo: {:?}", repo);
