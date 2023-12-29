@@ -53,7 +53,7 @@ fn check_repositories(
     ctx: &mut Context,
     repositories: Vec<Repository>,
 ) -> Result<(), anyhow::Error> {
-    for mut repository in repositories {
+    for repository in repositories {
         // terminal.write_all("\n".as_bytes());
         let name_with_owner = repository.info.full_name.clone();
 
