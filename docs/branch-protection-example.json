@@ -1,0 +1,35 @@
+{
+    "url": "https://api.github.com/repos/pajlada/github-repo-lint/branches/master/protection",
+    "required_status_checks": {
+        "url": "https://api.github.com/repos/pajlada/github-repo-lint/branches/master/protection/required_status_checks",
+        "strict": true,
+        "contexts": [
+            "build (ubuntu)",
+            "build (windows)",
+            "check-format",
+            "lint"
+        ],
+        "contexts_url": "https://api.github.com/repos/pajlada/github-repo-lint/branches/master/protection/required_status_checks/contexts",
+        "checks": [
+            { "context": "build (ubuntu)", "app_id": null },
+            { "context": "build (windows)", "app_id": null },
+            { "context": "check-format", "app_id": null },
+            { "context": "lint", "app_id": null }
+        ]
+    },
+    "required_signatures": {
+        "url": "https://api.github.com/repos/pajlada/github-repo-lint/branches/master/protection/required_signatures",
+        "enabled": false
+    },
+    "enforce_admins": {
+        "url": "https://api.github.com/repos/pajlada/github-repo-lint/branches/master/protection/enforce_admins",
+        "enabled": false
+    },
+    "required_linear_history": { "enabled": true },
+    "allow_force_pushes": { "enabled": true },
+    "allow_deletions": { "enabled": false },
+    "block_creations": { "enabled": false },
+    "required_conversation_resolution": { "enabled": false },
+    "lock_branch": { "enabled": false },
+    "allow_fork_syncing": { "enabled": false }
+}

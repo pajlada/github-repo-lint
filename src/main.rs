@@ -1,9 +1,19 @@
+#![warn(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::cargo)]
+#![allow(clippy::struct_excessive_bools)]
+
+#[allow(unused_imports)]
+use tracing::{debug, info};
+
 use clap::{Arg, ArgAction, Command};
 use console::Term;
-use reqwest::blocking::Client;
+use reqwest::{
+    blocking::Client,
+    header::{self, HeaderName, HeaderValue},
+};
 
 use const_format::formatcp;
-use log::*;
 use std::path::Path;
 
 mod api;
@@ -21,6 +31,8 @@ const PKG_VERSION: &str = env!("CARGO_PKG_VERSION");
 const USER_AGENT: &str = formatcp!("{}/{}", PKG_NAME, PKG_VERSION);
 
 fn main() -> Result<(), anyhow::Error> {
+    tracing_subscriber::fmt::init();
+
     let terminal = Term::stdout();
 
     let matches = Command::new(clap::crate_name!())
@@ -34,13 +46,6 @@ fn main() -> Result<(), anyhow::Error> {
                 .value_name("FILE")
                 .help("Path to config file to use")
                 .default_value("config.json"),
-        )
-        .arg(
-            Arg::new("verbose")
-                .short('v')
-                .long("verbose")
-                .action(ArgAction::Count)
-                .help("Sets the level of verbosity"),
         )
         .arg(
             Arg::new("fix")
@@ -69,37 +74,25 @@ fn main() -> Result<(), anyhow::Error> {
         )
         .get_matches();
 
-    let log_level = match matches.get_count("verbose") {
-        0 => log::LevelFilter::Info,
-        1 => log::LevelFilter::Debug,
-        _ => log::LevelFilter::Trace,
-    };
-
-    env_logger::Builder::new()
-        .format_timestamp(None)
-        .format_target(false)
-        .filter_module(module_path!(), log_level)
-        .init();
-
     let repos: Vec<&str> = matches
         .get_many::<String>("repo")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
     let users: Vec<&str> = matches
         .get_many::<String>("user")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
     let organizations: Vec<&str> = matches
         .get_many::<String>("organization")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
 
     let config_path = Path::new(matches.get_one::<String>("config").unwrap());
 
-    let config = config::load_config(config_path)?;
+    let config = config::load(config_path)?;
 
     let github_api_token = std::env::var("GITHUB_API_TOKEN").map_err(|_| {
         anyhow::anyhow!(
@@ -109,15 +102,23 @@ fn main() -> Result<(), anyhow::Error> {
 
     info!("Github API root: {:?}", config.github_api_root);
 
+    let mut default_headers = reqwest::header::HeaderMap::new();
+    default_headers.insert(
+        header::AUTHORIZATION,
+        HeaderValue::from_str(format!("Bearer {github_api_token}").as_str())?,
+    );
+    default_headers.insert(
+        header::ACCEPT,
+        HeaderValue::from_static("application/vnd.github+json"),
+    );
+    default_headers.insert(
+        HeaderName::from_static("x-github-api-version"),
+        HeaderValue::from_static("2022-11-28"),
+    );
+
     let client = Client::builder()
         .user_agent(USER_AGENT)
-        .default_headers(
-            std::iter::once((
-                reqwest::header::AUTHORIZATION,
-                reqwest::header::HeaderValue::from_str(&format!("Bearer {}", github_api_token))?,
-            ))
-            .collect(),
-        )
+        .default_headers(default_headers)
         .build()?;
 
     let api_client = api::new(client, config.github_api_root.as_str())?;

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use ::reqwest::blocking::Response;
-use log::*;
+use reqwest::blocking::Response;
+use tracing::debug;
 
 use crate::api::Client;
 
@@ -10,22 +10,15 @@ impl Client {
         &self,
         repo_owner: &str,
         repo_name: &str,
-        patch: HashMap<&str, serde_json::Value>,
+        patch: &HashMap<&str, serde_json::Value>,
     ) -> Result<Response, anyhow::Error> {
         let url = self
             .api_root
-            .join(format!("repos/{}/{}", repo_owner, repo_name).as_str())?;
+            .join(format!("repos/{repo_owner}/{repo_name}").as_str())?;
 
         // info!("Updating repository settings at url '{}'", url);
 
-        let rb = self
-            .client
-            .patch(url)
-            .header(
-                reqwest::header::ACCEPT,
-                "application/vnd.github.nebula-preview+json",
-            )
-            .json(&patch);
+        let rb = self.client.patch(url).json(&patch);
         let request = rb.build()?;
         debug!(
             "[{}/{}] Changing: {:?}",

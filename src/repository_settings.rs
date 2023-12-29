@@ -3,7 +3,7 @@ use serde_json::json;
 use std::collections::HashMap;
 use std::io::Read;
 
-use crate::models::RepositoryInfo;
+use crate::models::repository;
 
 macro_rules! ensure_same {
     ($s:ident, $r:ident, $field_name:ident) => {
@@ -61,7 +61,7 @@ macro_rules! define_repository_settings {
                 return true;
             }
 
-            pub fn diff(&self, repository: &RepositoryInfo) -> RepositorySettings {
+            pub fn diff(&self, repository: &repository::Info) -> RepositorySettings {
                 RepositorySettings {
                 $(
                     $field_name: ensure_same!(self, repository, $field_name),
