@@ -14,7 +14,7 @@ impl Client {
     ) -> Result<Response, anyhow::Error> {
         let url = self
             .api_root
-            .join(format!("repos/{}/{}", repo_owner, repo_name).as_str())?;
+            .join(format!("repos/{repo_owner}/{repo_name}").as_str())?;
 
         // info!("Updating repository settings at url '{}'", url);
 

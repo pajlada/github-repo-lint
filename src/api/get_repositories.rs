@@ -20,7 +20,7 @@ impl Client {
     pub fn get_repository_info(&self, repo_owner_and_name: &str) -> Result<RepositoryInfo> {
         let url = self
             .api_root
-            .join(format!("repos/{}", repo_owner_and_name).as_str())?;
+            .join(format!("repos/{repo_owner_and_name}").as_str())?;
 
         let response = self.client.get(url).send()?;
 
@@ -30,7 +30,7 @@ impl Client {
     pub fn get_repository_topics(&self, repo_owner_and_name: &str) -> Result<RepositoryTopics> {
         let url = self
             .api_root
-            .join(format!("repos/{}/topics", repo_owner_and_name).as_str())?;
+            .join(format!("repos/{repo_owner_and_name}/topics").as_str())?;
 
         let response = self.client.get(url).send()?;
 
@@ -47,11 +47,11 @@ impl Client {
         let mut pagination = PaginationData {
             next: Some(
                 self.api_root
-                    .join(format!("users/{}/repos", repo_owner).as_str())?,
+                    .join(format!("users/{repo_owner}/repos").as_str())?,
             ),
         };
 
-        terminal.write_all(format!("Loading repositories from user {}", repo_owner).as_bytes())?;
+        terminal.write_all(format!("Loading repositories from user {repo_owner}").as_bytes())?;
 
         while let Some(url) = pagination.next {
             let response = self
@@ -94,13 +94,12 @@ impl Client {
         let mut pagination = PaginationData {
             next: Some(
                 self.api_root
-                    .join(format!("orgs/{}/repos", repo_owner).as_str())?,
+                    .join(format!("orgs/{repo_owner}/repos").as_str())?,
             ),
         };
 
-        terminal.write_all(
-            format!("Loading repositories from organization {}", repo_owner).as_bytes(),
-        )?;
+        terminal
+            .write_all(format!("Loading repositories from organization {repo_owner}").as_bytes())?;
 
         while let Some(url) = pagination.next {
             let response = self

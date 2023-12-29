@@ -63,8 +63,7 @@ fn check_repositories(
             ctx.terminal.clear_line()?;
             ctx.terminal.write_all(
                 gray.apply_to(format!(
-                    "Checking repository {} - Skipping, it's archived or disabled.\n",
-                    name_with_owner
+                    "Checking repository {name_with_owner} - Skipping, it's archived or disabled.\n"
                 ))
                 .to_string()
                 .as_bytes(),
@@ -293,7 +292,7 @@ impl Repository {
                     );
 
                     for (k, v) in &patch {
-                        println!("    Set {} to {}", k, v);
+                        println!("    Set {k} to {v}");
                     }
                 }
             }
@@ -301,8 +300,7 @@ impl Repository {
             ctx.terminal.clear_line()?;
             ctx.terminal.write_all(
                 gray.apply_to(format!(
-                    "Checking repository {} settings - nothing to change\n",
-                    repo_with_owner
+                    "Checking repository {repo_with_owner} settings - nothing to change\n"
                 ))
                 .to_string()
                 .as_bytes(),

@@ -104,7 +104,7 @@ fn main() -> Result<(), anyhow::Error> {
     let mut default_headers = reqwest::header::HeaderMap::new();
     default_headers.insert(
         header::AUTHORIZATION,
-        HeaderValue::from_str(format!("Bearer {}", github_api_token).as_str())?,
+        HeaderValue::from_str(format!("Bearer {github_api_token}").as_str())?,
     );
     default_headers.insert(
         header::ACCEPT,

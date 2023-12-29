@@ -14,7 +14,7 @@ impl Client {
     ) -> anyhow::Result<()> {
         let url = self
             .api_root
-            .join(format!("repos/{}/topics", repo_full_name).as_str())?;
+            .join(format!("repos/{repo_full_name}/topics").as_str())?;
 
         let patch = json!({
             "names": topics,
