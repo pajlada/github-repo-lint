@@ -54,11 +54,7 @@ impl Client {
         terminal.write_all(format!("Loading repositories from user {repo_owner}").as_bytes())?;
 
         while let Some(url) = pagination.next {
-            let response = self
-                .client
-                .get(url)
-                .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
-                .send()?;
+            let response = self.client.get(url).send()?;
 
             // Read pagination from headers
             pagination = get_pagination_data(response.headers())?;
@@ -102,11 +98,7 @@ impl Client {
             .write_all(format!("Loading repositories from organization {repo_owner}").as_bytes())?;
 
         while let Some(url) = pagination.next {
-            let response = self
-                .client
-                .get(url)
-                .header(reqwest::header::ACCEPT, "application/vnd.github.v3+json")
-                .send()?;
+            let response = self.client.get(url).send()?;
 
             // Read pagination from headers
             pagination = get_pagination_data(response.headers())?;

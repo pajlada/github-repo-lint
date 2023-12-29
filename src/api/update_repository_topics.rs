@@ -22,15 +22,7 @@ impl Client {
 
         info!("Send patch: {:?} to {}", patch, url);
 
-        let response = self
-            .client
-            .put(url)
-            .header(
-                reqwest::header::ACCEPT,
-                "application/vnd.github.mercy-preview+json",
-            )
-            .json(&patch)
-            .send()?;
+        let response = self.client.put(url).json(&patch).send()?;
 
         match response.status() {
             StatusCode::OK => Ok(()),

@@ -18,14 +18,7 @@ impl Client {
 
         // info!("Updating repository settings at url '{}'", url);
 
-        let rb = self
-            .client
-            .patch(url)
-            .header(
-                reqwest::header::ACCEPT,
-                "application/vnd.github.nebula-preview+json",
-            )
-            .json(&patch);
+        let rb = self.client.patch(url).json(&patch);
         let request = rb.build()?;
         debug!(
             "[{}/{}] Changing: {:?}",
