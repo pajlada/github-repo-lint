@@ -76,17 +76,17 @@ fn main() -> Result<(), anyhow::Error> {
     let repos: Vec<&str> = matches
         .get_many::<String>("repo")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
     let users: Vec<&str> = matches
         .get_many::<String>("user")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
     let organizations: Vec<&str> = matches
         .get_many::<String>("organization")
         .unwrap_or_default()
-        .map(|s| s.as_str())
+        .map(String::as_str)
         .collect();
 
     let config_path = Path::new(matches.get_one::<String>("config").unwrap());
