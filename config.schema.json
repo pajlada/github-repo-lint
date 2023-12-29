@@ -1,0 +1,75 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "github-repo-lint config",
+    "description": "Describes a config file for the github-repo-lint project",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "description": "meta field for this schema"
+        },
+        "topics": {
+            "type": "array",
+            "description": "List of topic operations to apply to the repositories",
+            "items": {
+                "additionalProperties": false,
+                "required": ["operation", "name"],
+                "type": "object",
+                "properties": {
+                    "operation": {
+                        "type": "string",
+                        "enum": ["must_exist", "must_not_exist", "rename"]
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "settings": {
+            "type": "object",
+            "description": "Repository settings TODO describe better",
+            "additionalProperties": false,
+            "properties": {
+                "visibility": { "type": ["boolean", "null"] },
+                "allow_auto_merge": { "type": ["boolean", "null"] },
+                "has_issues": { "type": ["boolean", "null"] },
+                "has_projects": { "type": ["boolean", "null"] },
+                "has_wiki": { "type": ["boolean", "null"] },
+                "allow_merge_commit": { "type": ["boolean", "null"] },
+                "allow_squash_merge": { "type": ["boolean", "null"] },
+                "allow_rebase_merge": { "type": ["boolean", "null"] }
+            }
+        },
+        "branch_protections": {
+            "type": "array",
+            "description": "Branch protection on the repo. Each object indicates a branch protection rule on the repo. You can use the key $default_branch to apply the given rules on a branch protection for whatever the default branch is of the given repo (e.g. master or main)",
+
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["branch_name_pattern", "operation"],
+                "properties": {
+                    "branch_name_pattern": {
+                        "description": "The branch name pattern that should be used. You can use the value $default_branch to change this to whatever the default branch is for the repo (usually master or main)",
+                        "type": "string"
+                    },
+                    "operation": {
+                        "type": "string",
+                        "enum": ["must_exist", "may_exist"]
+                    },
+                    "is_admin_enforced": {
+                        "description": "Whether the branch protection rules should apply to administrators",
+                        "type": ["boolean", "null"]
+                    },
+                    "allow_deletions": {
+                        "description": "Allows deletion of the protected branch by anyone with write access to the repository",
+                        "type": ["boolean", "null"]
+                    }
+                }
+            }
+        }
+    },
+    "required": []
+}

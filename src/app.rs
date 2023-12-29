@@ -1,3 +1,4 @@
+use anyhow::Result;
 use std::io::Write;
 
 use crate::context::Context;
@@ -17,7 +18,7 @@ pub fn run(
     repos: Vec<&str>,
     users: Vec<&str>,
     organizations: Vec<&str>,
-) -> anyhow::Result<()> {
+) -> Result<()> {
     let mut repositories: Vec<Repository> = Vec::new();
 
     info!("Expected repository settings: {:?}", ctx.config.settings);
@@ -83,7 +84,45 @@ fn check_repositories(
 }
 
 impl Repository {
-    fn check_branch_protection_rules(&self) {
+    fn check_branch_protection_rules(&self, ctx: &mut Context) -> Result<()> {
+        if ctx.config.branch_protections.is_none() {
+            return Ok(());
+        }
+        let desired_branch_protections = ctx.config.branch_protections.as_ref().unwrap();
+        info!(
+            "Check {} branch protections",
+            desired_branch_protections.len()
+        );
+
+        for desired_branch_protection in desired_branch_protections {
+            info!("Desired branch protection: {desired_branch_protection:?}");
+
+            let branch_name_pattern = desired_branch_protection.parsed_branch_name_pattern(self);
+
+            // TODO: Support special $branch_name_pattern
+            let branch_protection = ctx.api_client.get_branch_protection(
+                &self.info.owner.login,
+                &self.info.name,
+                branch_name_pattern,
+            )?;
+
+            info!("Actual branch protection: {branch_protection:#?}");
+
+            let diff = desired_branch_protection.diff(&branch_protection)?;
+
+            info!("Diff required: {diff:?}");
+
+            if let Some(diff) = diff {
+                ctx.api_client.update_branch_protection(
+                    &self.info.owner.login,
+                    &self.info.name,
+                    branch_name_pattern,
+                    &diff,
+                )?;
+            }
+        }
+
+        Ok(())
         /*
         if self.branch_protection_rules.page_info.has_next_page {
             return Err(anyhow::anyhow!(
@@ -144,14 +183,15 @@ impl Repository {
         */
     }
 
-    fn check_topics(&mut self, ctx: &mut Context) -> anyhow::Result<()> {
-        if ctx.config.topics.is_empty() {
+    fn check_topics(&self, ctx: &mut Context) -> Result<()> {
+        if ctx.config.topics.is_none() {
             return Ok(());
         }
+        let topics = ctx.config.topics.as_ref().unwrap();
 
         let mut final_topics = self.topics.names.clone();
 
-        for operation in &ctx.config.topics {
+        for operation in topics {
             match operation {
                 TopicOperation::MustExist { name } => {
                     final_topics.insert(name.clone());
@@ -199,13 +239,18 @@ impl Repository {
         Ok(())
     }
 
-    fn check_settings(&mut self, ctx: &mut Context) -> anyhow::Result<()> {
+    fn check_settings(&self, ctx: &mut Context) -> Result<()> {
+        if ctx.config.settings.is_none() {
+            return Ok(());
+        }
+        let settings = ctx.config.settings.as_ref().unwrap();
+
         let gray = Style::new().color256(242);
         let repo_name = self.info.name.as_str();
         let repo_owner = self.info.owner.login.as_str();
         let repo_with_owner = self.info.full_name.as_str();
 
-        let result = ctx.config.settings.diff(&self.info);
+        let result = settings.diff(&self.info);
 
         if !result.empty() {
             // Update repository settings
@@ -267,8 +312,8 @@ impl Repository {
         Ok(())
     }
 
-    fn check_repository(&mut self, ctx: &mut Context) -> anyhow::Result<()> {
-        self.check_branch_protection_rules();
+    fn check_repository(&self, ctx: &mut Context) -> Result<()> {
+        // self.check_branch_protection_rules(ctx)?;
 
         self.check_topics(ctx)?;
 

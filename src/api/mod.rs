@@ -2,7 +2,7 @@ mod pagination;
 
 mod get_repositories;
 
-mod update_repository_branch_protection_rules;
+mod branch_protection;
 mod update_repository_settings;
 mod update_repository_topics;
 

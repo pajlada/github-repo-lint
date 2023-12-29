@@ -1,0 +1,7 @@
+trailingComma: es5
+endOfLine: auto
+tabWidth: 4
+overrides:
+    - files: "*.md"
+      options:
+          proseWrap: preserve

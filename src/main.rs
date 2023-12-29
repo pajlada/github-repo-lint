@@ -1,3 +1,7 @@
+#![warn(clippy::all)]
+#![warn(clippy::pedantic)]
+#![warn(clippy::cargo)]
+
 #[allow(unused_imports)]
 use tracing::{debug, info};
 
