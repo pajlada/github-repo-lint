@@ -83,6 +83,7 @@ fn check_repositories(
 }
 
 impl Repository {
+    #[allow(dead_code)]
     fn check_branch_protection_rules(&self, ctx: &mut Context) -> Result<()> {
         if ctx.config.branch_protections.is_none() {
             return Ok(());
