@@ -21,4 +21,4 @@ chrono = { version = "0.4.41", features = ["serde"] }
 derive_builder = "0.20.2"
 
 [dev-dependencies]
-rstest = { version = "0.25.0", default-features = false }
+rstest = { version = "0.26.1", default-features = false }
