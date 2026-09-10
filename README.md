@@ -21,7 +21,7 @@ The `topics` config key expects a list of operations
 ### Operations
 
 - `must_exist`  
-   If the repository does not have the topic `name`, add it.
+  If the repository does not have the topic `name`, add it.
 
   ```json
   {
