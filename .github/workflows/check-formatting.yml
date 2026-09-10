@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Check formatting with Prettier
-        uses: actionsx/prettier@v3
+        uses: Nerixyz/actionsx-prettier@a16066052c86f47f54dcb752e42d53a5d8e65c86 # v4.0.0+prettier3.9.5
         with:
           # prettier CLI arguments.
           args: --write .
